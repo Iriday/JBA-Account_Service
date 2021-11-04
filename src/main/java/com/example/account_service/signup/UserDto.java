@@ -1,4 +1,4 @@
-package com.example.account_service;
+package com.example.account_service.signup;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class UserDto {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private BigInteger id;
     @NotBlank
     @Size(max = 30)
     private String name;
