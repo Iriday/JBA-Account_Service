@@ -15,7 +15,7 @@ public class UserService {
 
     public UserDto signup(UserDto userDto) {
         if (userRepo.existsByEmailIgnoreCase(userDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exists!");
         }
 
         userDto.setEmail(userDto.getEmail().toLowerCase());
