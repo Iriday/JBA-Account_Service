@@ -14,11 +14,11 @@ public class UserService {
     private UserMapper userMapper;
 
     public UserDto signup(UserDto userDto) {
-        userDto.setEmail(userDto.getEmail().toLowerCase());
-
-        if (userRepo.existsByEmail(userDto.getEmail())) {
+        if (userRepo.existsByEmailIgnoreCase(userDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
+        userDto.setEmail(userDto.getEmail().toLowerCase());
 
         User user = userRepo.save(userMapper.userDtoToUser(userDto));
         return userMapper.userToUserDto(user);
