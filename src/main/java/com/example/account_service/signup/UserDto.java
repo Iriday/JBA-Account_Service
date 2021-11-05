@@ -28,7 +28,7 @@ public class UserDto {
     @Email(regexp = "\\w{1,30}@acme\\.com$")
     private String email;
     @NotBlank
-    @Size(max = 30)
+    @Size(min=12, max = 50)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }
