@@ -19,4 +19,9 @@ public class SignupController {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
         return userService.signup(userDto);
     }
+
+    @PostMapping("api/auth/changepass")
+    public StatusDto changePass(@RequestBody @Valid PasswordDto passDto) {
+        return userService.changePass(passDto);
+    }
 }
