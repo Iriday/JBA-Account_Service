@@ -16,7 +16,6 @@ public class SignupController {
 
     @PostMapping("api/auth/signup")
     public UserDto signup(@RequestBody @Valid UserDto userDto) {
-        userDto.setPassword(encoder.encode(userDto.getPassword()));
         return userService.signup(userDto);
     }
 
