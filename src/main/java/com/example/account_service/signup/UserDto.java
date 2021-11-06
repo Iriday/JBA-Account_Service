@@ -25,10 +25,10 @@ public class UserDto {
     @Size(max = 30)
     private String lastname;
     @NotBlank
-    @Email(regexp = "\\w{1,30}@acme\\.com$")
+    @Email(regexp = "\\w{1,51}@acme\\.com$", message = "email must end with '@acme.com' and the size must be between 10 and 60")
     private String email;
     @NotBlank
-    @Size(min=12, max = 50)
+    @Size(min = 12, max = 50)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }
