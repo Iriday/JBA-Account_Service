@@ -18,10 +18,7 @@ public class UserService {
     private PasswordBlacklist passwordBlacklist;
 
     public UserDto signup(UserDto userDto) {
-        if (userRepo.existsByEmailIgnoreCase(userDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exists!");
-        }
-
+        throwIfUserExistsByEmailIgnoreCase(userDto.getEmail());
         throwIfPasswordInBlackList(userDto.getPassword());
 
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -34,16 +31,27 @@ public class UserService {
     public StatusDto changePass(PasswordDto passDto) {
         User currUser = currentUser.getCurrentUser().getUserEntity();
 
-        if (passwordEncoder.matches(passDto.getNew_password(), currUser.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The password must be different!");
-        }
-
+        throwIfPasswordsMatch(passDto.getNew_password(), currUser.getPassword());
         throwIfPasswordInBlackList(passDto.getNew_password());
 
         currUser.setPassword(passwordEncoder.encode(passDto.getNew_password()));
         userRepo.save(currUser);
 
         return new StatusDto(currUser.getEmail(), "The password has been updated successfully");
+    }
+
+    // Exceptions
+
+    private void throwIfPasswordsMatch(String rawPassword, String encodedPass) {
+        if (passwordEncoder.matches(rawPassword, encodedPass)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The password must be different!");
+        }
+    }
+
+    private void throwIfUserExistsByEmailIgnoreCase(String email) {
+        if (userRepo.existsByEmailIgnoreCase(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User exists!");
+        }
     }
 
     private void throwIfPasswordInBlackList(String password) {
