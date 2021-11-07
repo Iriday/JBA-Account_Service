@@ -1,17 +1,17 @@
-package com.example.account_service.signup;
+package account.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PasswordDto {
+public class StatusDto {
     @NotBlank
-    @Size(min = 12, max = 50)
-    private String new_password;
+    private String email;
+    @NotBlank
+    private String status;
 }

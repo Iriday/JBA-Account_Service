@@ -1,6 +1,6 @@
-package com.example.account_service.security;
+package account.security;
 
-import com.example.account_service.signup.User;
+import account.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

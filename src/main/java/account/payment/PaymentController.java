@@ -1,8 +1,8 @@
-package com.example.account_service.payment;
+package account.payment;
 
-import com.example.account_service.security.UserDetailsImpl;
-import com.example.account_service.signup.UserDto;
-import com.example.account_service.signup.UserMapper;
+import account.security.UserDetailsImpl;
+import account.user.UserDto;
+import account.user.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

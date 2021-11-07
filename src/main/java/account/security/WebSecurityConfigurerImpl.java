@@ -1,4 +1,4 @@
-package com.example.account_service.security;
+package account.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.example.account_service.signup;
+package account.user;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
-public class SignupController {
+public class UserController {
     private UserService userService;
     private BCryptPasswordEncoder encoder;
 

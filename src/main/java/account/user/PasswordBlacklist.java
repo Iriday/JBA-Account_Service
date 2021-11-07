@@ -1,4 +1,4 @@
-package com.example.account_service.signup;
+package account.user;
 
 import org.springframework.stereotype.Component;
 

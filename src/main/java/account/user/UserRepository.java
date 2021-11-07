@@ -1,4 +1,4 @@
-package com.example.account_service.signup;
+package account.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

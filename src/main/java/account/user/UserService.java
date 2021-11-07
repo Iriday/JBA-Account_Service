@@ -1,4 +1,4 @@
-package com.example.account_service.signup;
+package account.user;
 
 
 import lombok.AllArgsConstructor;

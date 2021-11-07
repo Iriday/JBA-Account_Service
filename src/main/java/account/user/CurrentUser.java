@@ -1,6 +1,6 @@
-package com.example.account_service.signup;
+package account.user;
 
-import com.example.account_service.security.UserDetailsImpl;
+import account.security.UserDetailsImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 

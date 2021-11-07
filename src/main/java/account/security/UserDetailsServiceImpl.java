@@ -1,6 +1,6 @@
-package com.example.account_service.security;
+package account.security;
 
-import com.example.account_service.signup.UserRepository;
+import account.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
