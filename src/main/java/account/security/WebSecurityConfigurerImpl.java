@@ -34,7 +34,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "api/auth/signup").permitAll()
+                .mvcMatchers(HttpMethod.POST, "api/auth/signup", "api/acct/payments").permitAll()
                 .anyRequest().authenticated();
 
         http
