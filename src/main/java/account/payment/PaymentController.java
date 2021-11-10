@@ -7,10 +7,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,6 +22,11 @@ public class PaymentController {
     @PostMapping("api/acct/payments")
     public StatusDto addPayments(@RequestBody @UniqueElements List<@Valid PaymentDto> payments) {
         return paymentService.addPayments(payments);
+    }
+
+    @PutMapping("api/acct/payments")
+    public StatusDto updatePayments(@RequestBody @Valid PaymentDto paymentDto){
+         return paymentService.updatePayment(paymentDto);
     }
 
     @GetMapping("api/empl/payment")

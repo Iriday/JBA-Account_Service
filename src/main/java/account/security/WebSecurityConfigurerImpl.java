@@ -35,6 +35,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "api/auth/signup", "api/acct/payments").permitAll()
+                .mvcMatchers(HttpMethod.PUT, "api/acct/payments").permitAll()
                 .anyRequest().authenticated();
 
         http

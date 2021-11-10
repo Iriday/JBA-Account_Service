@@ -34,4 +34,16 @@ public class PaymentService {
 
         return new StatusDto("Added successfully!");
     }
+
+    @Transactional
+    public StatusDto updatePayment(PaymentDto paymentDto) {
+        Payment payment = paymentRepository
+                .findByEmployeeIgnoreCaseAndPeriod(paymentDto.getEmployee(), paymentDto.getPeriod())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Record not found"));
+
+        payment.setSalary(paymentDto.getSalary());
+        paymentRepository.save(payment);
+
+        return new StatusDto("Updated successfully!");
+    }
 }
