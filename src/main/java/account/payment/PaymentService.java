@@ -1,5 +1,7 @@
 package account.payment;
 
+import account.user.CurrentUser;
+import account.user.User;
 import account.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     private UserRepository userRepository;
     private PaymentMapper paymentMapper;
+    private CurrentUser currentUser;
 
     @Transactional
     public StatusDto addPayments(List<PaymentDto> paymentDtos) {
@@ -45,5 +48,23 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         return new StatusDto("Updated successfully!");
+    }
+
+    public EmployeeDataDto getEmployeeDataByEmployeeIgnoreCaseAndPeriod(String period) {
+        User currUser = currentUser
+                .getCurrentUser()
+                .getUserEntity();
+
+        Payment payment = paymentRepository
+                .findByEmployeeIgnoreCaseAndPeriod(currUser.getEmail(), period)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Record with the specified period not found"));
+
+        return EmployeeDataDto
+                .builder()
+                .name(currUser.getName())
+                .lastname(currUser.getLastName())
+                .period(payment.getPeriod())
+                .salary(payment.getSalary())
+                .build();
     }
 }

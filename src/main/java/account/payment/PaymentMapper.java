@@ -23,4 +23,13 @@ public class PaymentMapper {
                 .map(this::paymentDtoToPayment)
                 .collect(Collectors.toList());
     }
+
+    public PaymentDto paymentToPaymentDto(Payment payment){
+        return PaymentDto
+                .builder()
+                .employee(payment.getEmployee())
+                .period(payment.getPeriod())
+                .salary(payment.getSalary())
+                .build();
+    }
 }
