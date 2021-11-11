@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 @AllArgsConstructor
 @Service
@@ -63,8 +66,17 @@ public class PaymentService {
                 .builder()
                 .name(currUser.getName())
                 .lastname(currUser.getLastName())
-                .period(payment.getPeriod())
-                .salary(payment.getSalary())
+                .period(formatPeriod(payment.getPeriod()))
+                .salary(centsToStrDollarsCents(payment.getSalary()))
                 .build();
+    }
+
+    private String formatPeriod(String period) {
+        return Month.of(Integer.parseInt(period.substring(0, 2))).getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                + " - " + period.substring(3);
+    }
+
+    private String centsToStrDollarsCents(long cents) {
+        return String.format("%d dollar(s) %d cent(s)", cents / 100, cents % 100);
     }
 }
