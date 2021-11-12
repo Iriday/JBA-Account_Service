@@ -13,6 +13,7 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -53,7 +54,7 @@ public class PaymentService {
         return new StatusDto("Updated successfully!");
     }
 
-    public EmployeeDataDto getEmployeeDataByEmployeeIgnoreCaseAndPeriod(String period) {
+    public EmployeeDataDto getCurrentEmployeeDataByPeriod(String period) {
         User currUser = currentUser
                 .getCurrentUser()
                 .getUserEntity();
@@ -70,6 +71,26 @@ public class PaymentService {
                 .salary(centsToStrDollarsCents(payment.getSalary()))
                 .build();
     }
+
+    public List<EmployeeDataDto> getAllCurrentEmployeeData() {
+        User currUser = currentUser
+                .getCurrentUser()
+                .getUserEntity();
+
+        List<Payment> payments = paymentRepository.findAllByEmployeeIgnoreCase(currUser.getEmail());
+
+        return payments
+                .stream()
+                .map(p -> EmployeeDataDto
+                        .builder()
+                        .name(currUser.getName())
+                        .lastname(currUser.getLastName())
+                        .period(formatPeriod(p.getPeriod()))
+                        .salary(centsToStrDollarsCents(p.getSalary()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
     private String formatPeriod(String period) {
         return Month.of(Integer.parseInt(period.substring(0, 2))).getDisplayName(TextStyle.FULL, Locale.ENGLISH)

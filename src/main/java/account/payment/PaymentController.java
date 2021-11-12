@@ -26,7 +26,11 @@ public class PaymentController {
     }
 
     @GetMapping("api/empl/payment")
-    public EmployeeDataDto getPayment(@RequestParam @Pattern(regexp = "\\d{2}-\\d{4}") String period) {
-        return paymentService.getEmployeeDataByEmployeeIgnoreCaseAndPeriod(period);
+    public Object getPayment(@RequestParam(required = false) @Pattern(regexp = "\\d{2}-\\d{4}") String period) {
+        if (period != null) {
+            return paymentService.getCurrentEmployeeDataByPeriod(period);
+        } else {
+            return paymentService.getAllCurrentEmployeeData();
+        }
     }
 }
