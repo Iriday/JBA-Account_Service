@@ -6,10 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -33,5 +37,11 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
                 .build();
 
         return new ResponseEntity<>(responseEntity, headers, status);
+    }
+
+    // BasicErrorController will handle the exception. Just overriding status code
+    @ExceptionHandler(ConstraintViolationException.class)
+    public void handleConstraintViolationException(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
     }
 }
