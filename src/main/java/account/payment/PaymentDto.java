@@ -1,7 +1,6 @@
 package account.payment;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +17,7 @@ public class PaymentDto {
     @NotBlank
     private String employee;
     @NotNull
-    @Pattern(regexp = "\\d{2}-\\d{4}")
+    @Pattern(regexp = "(0[1-9]|1[0-2])-\\d{4}", message = "Period is incorrect")
     private String period;
     @NotNull
     @Min(value = 0)

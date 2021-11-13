@@ -26,7 +26,7 @@ public class PaymentController {
     }
 
     @GetMapping("api/empl/payment")
-    public Object getPayment(@RequestParam(required = false) @Pattern(regexp = "\\d{2}-\\d{4}") String period) {
+    public Object getPayment(@RequestParam(required = false) @Pattern(regexp = "(0[1-9]|1[0-2])-\\d{4}", message = "Period is incorrect") String period) {
         if (period != null) {
             return paymentService.getCurrentEmployeeDataByPeriod(period);
         } else {
