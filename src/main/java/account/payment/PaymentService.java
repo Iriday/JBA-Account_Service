@@ -75,7 +75,7 @@ public class PaymentService {
                 .getCurrentUser()
                 .getUserEntity();
 
-        List<Payment> payments = paymentRepository.findAllByEmployeeIgnoreCase(currUser.getEmail());
+        List<Payment> payments = paymentRepository.findAllByEmployeeIgnoreCaseOrderByPeriodDesc(currUser.getEmail());
 
         return payments
                 .stream()

@@ -14,5 +14,5 @@ public interface PaymentRepository extends JpaRepository<Payment, BigInteger> {
 
     Optional<Payment> findByEmployeeIgnoreCaseAndPeriod(String employee, YearMonth period);
 
-    List<Payment> findAllByEmployeeIgnoreCase(String employee);
+    List<Payment> findAllByEmployeeIgnoreCaseOrderByPeriodDesc(String employee);
 }
