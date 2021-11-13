@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.math.BigInteger;
+import java.time.YearMonth;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +21,6 @@ public class Payment {
     @GeneratedValue
     private BigInteger id;
     private String employee;
-    private String period;
+    private YearMonth period;
     private Long salary;
 }

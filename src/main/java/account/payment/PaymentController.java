@@ -2,11 +2,13 @@ package account.payment;
 
 import lombok.AllArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
+import java.time.YearMonth;
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -26,11 +28,15 @@ public class PaymentController {
     }
 
     @GetMapping("api/empl/payment")
-    public Object getPayment(@RequestParam(required = false) @Pattern(regexp = "(0[1-9]|1[0-2])-\\d{4}", message = "Period is incorrect") String period) {
+    public Object getPayment(@RequestParam(required = false) @DateTimeFormat(pattern = "MM-yyyy") Calendar period) {
         if (period != null) {
-            return paymentService.getCurrentEmployeeDataByPeriod(period);
+            return paymentService.getCurrentEmployeeDataByPeriod(calendarToYearMonth(period));
         } else {
             return paymentService.getAllCurrentEmployeeData();
         }
+    }
+
+    private YearMonth calendarToYearMonth(Calendar calendar) {
+        return YearMonth.of(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
     }
 }

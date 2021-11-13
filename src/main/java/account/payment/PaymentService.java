@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Month;
-import java.time.format.TextStyle;
+import java.time.YearMonth;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -54,7 +52,7 @@ public class PaymentService {
         return new StatusDto("Updated successfully!");
     }
 
-    public EmployeeDataDto getCurrentEmployeeDataByPeriod(String period) {
+    public EmployeeDataDto getCurrentEmployeeDataByPeriod(YearMonth period) {
         User currUser = currentUser
                 .getCurrentUser()
                 .getUserEntity();
@@ -67,7 +65,7 @@ public class PaymentService {
                 .builder()
                 .name(currUser.getName())
                 .lastname(currUser.getLastName())
-                .period(formatPeriod(payment.getPeriod()))
+                .period(payment.getPeriod())
                 .salary(centsToStrDollarsCents(payment.getSalary()))
                 .build();
     }
@@ -85,16 +83,10 @@ public class PaymentService {
                         .builder()
                         .name(currUser.getName())
                         .lastname(currUser.getLastName())
-                        .period(formatPeriod(p.getPeriod()))
+                        .period(p.getPeriod())
                         .salary(centsToStrDollarsCents(p.getSalary()))
                         .build())
                 .collect(Collectors.toList());
-    }
-
-
-    private String formatPeriod(String period) {
-        return Month.of(Integer.parseInt(period.substring(0, 2))).getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-                + " - " + period.substring(3);
     }
 
     private String centsToStrDollarsCents(long cents) {

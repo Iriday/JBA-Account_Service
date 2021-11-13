@@ -1,11 +1,13 @@
 package account.payment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.time.YearMonth;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -17,8 +19,8 @@ public class PaymentDto {
     @NotBlank
     private String employee;
     @NotNull
-    @Pattern(regexp = "(0[1-9]|1[0-2])-\\d{4}", message = "Period is incorrect")
-    private String period;
+    @JsonFormat(pattern = "MM-yyyy")
+    private YearMonth period;
     @NotNull
     @Min(value = 0)
     private Long salary;
