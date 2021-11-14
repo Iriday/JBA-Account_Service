@@ -1,8 +1,10 @@
 package account.exceptions;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,6 +35,34 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
                 .error(status.getReasonPhrase())
                 .status(status.value())
                 .message(defaultMessage)
+                .path(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
+                .build();
+
+        return new ResponseEntity<>(responseEntity, headers, status);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorResponse responseEntity = ErrorResponse
+                .builder()
+                .timestamp(new Date())
+                .error(status.getReasonPhrase())
+                .status(status.value())
+                .message(ex.getLocalizedMessage())
+                .path(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
+                .build();
+
+        return new ResponseEntity<>(responseEntity, headers, status);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorResponse responseEntity = ErrorResponse
+                .builder()
+                .timestamp(new Date())
+                .error(status.getReasonPhrase())
+                .status(status.value())
+                .message(ex.getLocalizedMessage())
                 .path(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
                 .build();
 
