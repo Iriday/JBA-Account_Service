@@ -12,7 +12,6 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
-    private BCryptPasswordEncoder encoder;
 
     @PostMapping("api/auth/signup")
     public UserDto signup(@RequestBody @Valid UserDto userDto) {
