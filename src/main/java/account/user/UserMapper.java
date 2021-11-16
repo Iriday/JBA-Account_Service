@@ -2,6 +2,9 @@ package account.user;
 
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class UserMapper {
     public User userDtoToUser(UserDto userDto) {
@@ -24,5 +27,12 @@ public class UserMapper {
                 .email(user.getEmail())
                 .roles(user.getRoles())
                 .build();
+    }
+
+    public List<UserDto> usersToUserDtos(List<User> users){
+        return users
+                .stream()
+                .map(this::userToUserDto)
+                .collect(Collectors.toList());
     }
 }
