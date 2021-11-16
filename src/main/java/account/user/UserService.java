@@ -43,6 +43,11 @@ public class UserService {
         return new StatusDto(currUser.getEmail(), "The password has been updated successfully");
     }
 
+    public User getUserByEmailIgnoreCase(String email){
+       return userRepo.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+    }
+
     private Role getInitialRole() {
         return userRepo.count() == 0 ? Role.ROLE_ADMINISTRATOR : Role.ROLE_USER;
     }
