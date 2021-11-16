@@ -1,10 +1,13 @@
 package account.admin;
 
+import account.user.User;
 import account.user.UserDto;
 import account.user.UserMapper;
 import account.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -13,8 +16,26 @@ import java.util.List;
 public class AdminService {
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private final static String ROLE_ADMIN = "ROLE_ADMINISTRATOR";
 
     public List<UserDto> getAllUsersOrderById() {
         return userMapper.usersToUserDtos(userRepository.findAllByOrderById());
+    }
+
+    public StatusDto deleteUserByEmail(String email) {
+        User user = userRepository
+                .findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+
+        if (user.getRoles().contains(ROLE_ADMIN))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't remove ADMINISTRATOR role!");
+
+        userRepository.deleteById(user.getId());
+
+        return StatusDto
+                .builder()
+                .user(email)
+                .status("Deleted successfully!")
+                .build();
     }
 }

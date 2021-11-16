@@ -36,7 +36,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "api/auth/signup", "api/acct/payments").permitAll()
                 .mvcMatchers(HttpMethod.PUT, "api/acct/payments").permitAll()
-                .mvcMatchers("api/admin/user").hasRole("ADMINISTRATOR")
+                .mvcMatchers("api/admin/**").hasRole("ADMINISTRATOR")
                 .anyRequest().authenticated();
 
         http
