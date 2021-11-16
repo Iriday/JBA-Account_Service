@@ -1,5 +1,6 @@
 package account.user;
 
+import account.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,5 +24,5 @@ public class User {
     private String email;
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
+    private Set<Role> roles;
 }

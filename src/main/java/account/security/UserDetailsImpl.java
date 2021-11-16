@@ -17,7 +17,11 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(User user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.rolesAndAuthorities = user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        this.rolesAndAuthorities = user
+                .getRoles()
+                .stream()
+                .map(r -> new SimpleGrantedAuthority(r.name()))
+                .collect(Collectors.toSet());
         this.user = user;
     }
 

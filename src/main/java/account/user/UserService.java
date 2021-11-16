@@ -1,6 +1,6 @@
 package account.user;
 
-
+import account.security.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +18,6 @@ public class UserService {
     private CurrentUser currentUser;
     private BCryptPasswordEncoder passwordEncoder;
     private PasswordBlacklist passwordBlacklist;
-    private InitialRole initialRole;
 
     public UserDto signup(UserDto userDto) {
         throwIfUserExistsByEmailIgnoreCase(userDto.getEmail());
@@ -26,7 +25,7 @@ public class UserService {
 
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDto.setEmail(userDto.getEmail().toLowerCase());
-        userDto.setRoles(Set.of(initialRole.getInitialRole()));
+        userDto.setRoles(Set.of(getInitialRole()));
 
         User user = userRepo.save(userMapper.userDtoToUser(userDto));
         return userMapper.userToUserDto(user);
@@ -42,6 +41,10 @@ public class UserService {
         userRepo.save(currUser);
 
         return new StatusDto(currUser.getEmail(), "The password has been updated successfully");
+    }
+
+    private Role getInitialRole() {
+        return userRepo.count() == 0 ? Role.ROLE_ADMINISTRATOR : Role.ROLE_USER;
     }
 
     // Exceptions

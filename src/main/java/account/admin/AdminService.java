@@ -1,5 +1,6 @@
 package account.admin;
 
+import account.security.Role;
 import account.user.User;
 import account.user.UserDto;
 import account.user.UserMapper;
@@ -16,7 +17,6 @@ import java.util.List;
 public class AdminService {
     private UserRepository userRepository;
     private UserMapper userMapper;
-    private final static String ROLE_ADMIN = "ROLE_ADMINISTRATOR";
 
     public List<UserDto> getAllUsersOrderById() {
         return userMapper.usersToUserDtos(userRepository.findAllByOrderById());
@@ -27,7 +27,7 @@ public class AdminService {
                 .findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
 
-        if (user.getRoles().contains(ROLE_ADMIN))
+        if (user.getRoles().contains(Role.ROLE_ADMINISTRATOR))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't remove ADMINISTRATOR role!");
 
         userRepository.deleteById(user.getId());
