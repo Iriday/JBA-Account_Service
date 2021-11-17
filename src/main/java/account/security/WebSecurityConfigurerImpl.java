@@ -11,6 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
+import static account.security.Role.*;
+
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
@@ -34,9 +36,11 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "api/auth/signup", "api/acct/payments").permitAll()
-                .mvcMatchers(HttpMethod.PUT, "api/acct/payments").permitAll()
-                .mvcMatchers("api/admin/**").hasRole("ADMINISTRATOR")
+                .mvcMatchers(HttpMethod.POST, "api/auth/signup").permitAll()
+                .mvcMatchers("api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(), ROLE_ADMINISTRATOR.name())
+                .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
+                .mvcMatchers("api/acct/payments").hasAuthority(ROLE_ACCOUNTANT.name())
+                .mvcMatchers("api/admin/**").hasAuthority(ROLE_ADMINISTRATOR.name())
                 .anyRequest().authenticated();
 
         http
