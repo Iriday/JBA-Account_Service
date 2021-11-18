@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
-import java.util.Set;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +24,6 @@ public class User {
     private String email;
     private String password;
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    @OrderBy
+    private List<Role> roles;
 }

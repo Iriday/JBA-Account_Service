@@ -9,7 +9,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import static account.security.Role.*;
 
@@ -41,7 +40,7 @@ public class AdminService {
 
     public UserDto changeUserRole(ChangeRoleDto changeRoleDto) {
         final User user = userService.getUserByEmailIgnoreCase(changeRoleDto.getUser());
-        final Set<Role> roles = user.getRoles();
+        final List<Role> roles = user.getRoles();
         final Role role = Role
                 .roleFromStr("ROLE_" + changeRoleDto.getRole().toUpperCase(Locale.ROOT))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found!"));

@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Set;
+import java.util.List;
 
 
 @Service
@@ -25,7 +25,7 @@ public class UserService {
 
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDto.setEmail(userDto.getEmail().toLowerCase());
-        userDto.setRoles(Set.of(getInitialRole()));
+        userDto.setRoles(List.of(getInitialRole()));
 
         User user = userRepo.save(userMapper.userDtoToUser(userDto));
         return userMapper.userToUserDto(user);
