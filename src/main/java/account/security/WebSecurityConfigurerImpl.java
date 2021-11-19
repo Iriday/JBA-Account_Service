@@ -1,5 +1,6 @@
 package account.security;
 
+import account.exceptions.AccessDeniedHandlerImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import static account.security.Role.*;
 @AllArgsConstructor
 public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
+    private AccessDeniedHandlerImpl accessDeniedHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -54,6 +56,9 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
 
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler); // forbidden 403
     }
 
     @Bean
