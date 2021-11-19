@@ -1,6 +1,7 @@
 package account.security;
 
 import account.exceptions.AccessDeniedHandlerImpl;
+import account.exceptions.AuthenticationEntryPointImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,7 @@ import static account.security.Role.*;
 public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
     private AccessDeniedHandlerImpl accessDeniedHandler;
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,6 +61,9 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
 
         http
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler); // forbidden 403
+
+        http
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint); // unauthorized 401
     }
 
     @Bean
