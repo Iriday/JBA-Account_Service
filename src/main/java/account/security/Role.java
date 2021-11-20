@@ -5,6 +5,7 @@ import java.util.Optional;
 public enum Role {
     ROLE_ADMINISTRATOR,
     ROLE_ACCOUNTANT,
+    ROLE_AUDITOR,
     ROLE_USER;
 
     public static Optional<Role> roleFromStr(String role){

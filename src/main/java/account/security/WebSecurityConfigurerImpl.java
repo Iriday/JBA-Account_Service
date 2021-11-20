@@ -45,6 +45,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
                 .mvcMatchers("api/acct/payments").hasAuthority(ROLE_ACCOUNTANT.name())
                 .mvcMatchers("api/admin/**").hasAuthority(ROLE_ADMINISTRATOR.name())
+                .mvcMatchers("api/security/events").hasAuthority(ROLE_AUDITOR.name())
                 .anyRequest().authenticated();
 
         http
