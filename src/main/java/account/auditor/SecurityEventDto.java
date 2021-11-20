@@ -21,8 +21,8 @@ public class SecurityEventDto {
     private BigInteger id;
     @NotNull
     private Date date;
-    @NotBlank
-    private String action;
+    @NotNull
+    private Event action;
     @NotBlank
     private String subject;
     @NotBlank

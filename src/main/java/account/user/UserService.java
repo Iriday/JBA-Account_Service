@@ -1,10 +1,14 @@
 package account.user;
 
+import account.auditor.AuditorService;
+import account.auditor.Event;
+import account.auditor.SecurityEvent;
 import account.security.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -12,12 +16,14 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class UserService {
     private UserRepository userRepo;
     private UserMapper userMapper;
     private CurrentUser currentUser;
     private BCryptPasswordEncoder passwordEncoder;
     private PasswordBlacklist passwordBlacklist;
+    private AuditorService auditorService;
 
     public UserDto signup(UserDto userDto) {
         throwIfUserExistsByEmailIgnoreCase(userDto.getEmail());
@@ -28,6 +34,14 @@ public class UserService {
         userDto.setRoles(List.of(getInitialRole()));
 
         User user = userRepo.save(userMapper.userDtoToUser(userDto));
+
+        auditorService.saveSecurityEvent(SecurityEvent
+                .builder()
+                .action(Event.CREATE_USER)
+                .subject("Anonymous")
+                .object(user.getEmail())
+                .build());
+
         return userMapper.userToUserDto(user);
     }
 

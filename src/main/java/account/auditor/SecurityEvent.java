@@ -21,7 +21,7 @@ public class SecurityEvent {
     @GeneratedValue
     private BigInteger id;
     private Date date;
-    private String action;
+    private Event action;
     private String subject;
     private String object;
     private String path;
