@@ -17,5 +17,5 @@ public class ChangeRoleDto {
     @NotBlank
     private String role;
     @NotNull
-    private Operation operation;
+    private RoleOperation operation;
 }

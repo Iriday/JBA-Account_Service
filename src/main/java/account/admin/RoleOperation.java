@@ -1,6 +1,6 @@
 package account.admin;
 
-public enum Operation {
+public enum RoleOperation {
     GRANT,
     REMOVE
 }
