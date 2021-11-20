@@ -1,5 +1,8 @@
 package account.admin;
 
+import account.auditor.AuditorService;
+import account.auditor.Event;
+import account.auditor.SecurityEvent;
 import account.security.Role;
 import account.user.*;
 import lombok.AllArgsConstructor;
@@ -20,6 +23,8 @@ public class AdminService {
     private UserRepository userRepo;
     private UserService userService;
     private UserMapper userMapper;
+    private AuditorService auditorService;
+    private CurrentUser currentUser;
 
     public List<UserDto> getAllUsersOrderById() {
         return userMapper.usersToUserDtos(userRepo.findAllByOrderById());
@@ -49,6 +54,13 @@ public class AdminService {
 
         switch (changeRoleDto.getOperation()) {
             case GRANT:
+                auditorService.saveSecurityEvent(SecurityEvent
+                        .builder()
+                        .action(Event.GRANT_ROLE)
+                        .subject(currentUser.getCurrentUser().getUsername())
+                        .object("Grant role " + changeRoleDto.getRole() + " to " + user.getEmail())
+                        .build());
+
                 if (roles.contains(role)) {
                     break;
                 }
@@ -60,6 +72,13 @@ public class AdminService {
                 break;
 
             case REMOVE:
+                auditorService.saveSecurityEvent(SecurityEvent
+                        .builder()
+                        .action(Event.REMOVE_ROLE)
+                        .subject(currentUser.getCurrentUser().getUsername())
+                        .object("Remove role " + changeRoleDto.getRole() + " from " + user.getEmail())
+                        .build());
+
                 if (!roles.contains(role)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not have a role!");
                 }
@@ -80,7 +99,7 @@ public class AdminService {
     public account.payment.StatusDto changeAccess(ChangeAccessDto dto) {
         User user = userService.getUserByEmailIgnoreCase(dto.getName());
 
-        if(dto.getOperation() == AccessOperation.LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)){
+        if (dto.getOperation() == AccessOperation.LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't lock the ADMINISTRATOR!");
         }
 
