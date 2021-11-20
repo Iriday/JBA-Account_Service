@@ -54,6 +54,13 @@ public class UserService {
         currUser.setPassword(passwordEncoder.encode(passDto.getNew_password()));
         userRepo.save(currUser);
 
+        auditorService.saveSecurityEvent(SecurityEvent
+                .builder()
+                .action(Event.CHANGE_PASSWORD)
+                .object(currUser.getEmail())
+                .subject(currUser.getEmail())
+                .build());
+
         return new StatusDto(currUser.getEmail(), "The password has been updated successfully");
     }
 
