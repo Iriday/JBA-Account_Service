@@ -1,4 +1,4 @@
-package account.logging;
+package account.auditor;
 
 public enum Event {
     CREATE_USER,
