@@ -14,6 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Locale;
 
+import static account.admin.AccessOperation.LOCK;
+import static account.admin.AccessOperation.UNLOCK;
+import static account.auditor.Event.LOCK_USER;
+import static account.auditor.Event.UNLOCK_USER;
 import static account.security.Role.*;
 
 @Service
@@ -106,12 +110,31 @@ public class AdminService {
     public account.payment.StatusDto changeAccess(ChangeAccessDto dto) {
         User user = userService.getUserByEmailIgnoreCase(dto.getName());
 
-        if (dto.getOperation() == AccessOperation.LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)) {
+        if (dto.getOperation() == LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't lock the ADMINISTRATOR!");
         }
 
         user.setAccountNonLocked(dto.getOperation().boolValue);
         userRepo.save(user);
+
+
+        SecurityEvent securityEvent = SecurityEvent
+                .builder()
+                .subject(currentUser.getCurrentUser().getUsername())
+                .build();
+
+        switch (dto.getOperation()) {
+            case LOCK:
+                securityEvent.setAction(LOCK_USER);
+                securityEvent.setObject("Lock user " + dto.getName());
+                break;
+
+            case UNLOCK:
+                securityEvent.setAction(UNLOCK_USER);
+                securityEvent.setObject("Unlock user " + dto.getName());
+                break;
+        }
+        auditorService.saveSecurityEvent(securityEvent);
 
         return new account.payment.StatusDto(String.format("User %s %s!", user.getEmail(), dto.getOperation().strValue));
     }
