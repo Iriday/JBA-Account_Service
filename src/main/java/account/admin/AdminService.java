@@ -38,6 +38,13 @@ public class AdminService {
 
         userRepo.deleteById(user.getId());
 
+        auditorService.saveSecurityEvent(SecurityEvent
+                .builder()
+                .action(Event.DELETE_USER)
+                .subject(currentUser.getCurrentUser().getUsername())
+                .object(user.getEmail())
+                .build());
+
         return StatusDto
                 .builder()
                 .user(email)
