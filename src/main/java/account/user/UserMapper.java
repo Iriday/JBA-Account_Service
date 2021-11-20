@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
+    private final boolean accountNonLocked = true;
+
     public User userDtoToUser(UserDto userDto) {
         return User
                 .builder()
@@ -15,6 +17,7 @@ public class UserMapper {
                 .email(userDto.getEmail())
                 .password(userDto.getPassword())
                 .roles(userDto.getRoles().stream().sorted().collect(Collectors.toList()))
+                .isAccountNonLocked(accountNonLocked)
                 .build();
     }
 

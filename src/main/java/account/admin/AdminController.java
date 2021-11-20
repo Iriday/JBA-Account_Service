@@ -23,7 +23,12 @@ public class AdminController {
     }
 
     @PutMapping("api/admin/user/role")
-    public UserDto changeUserRole(@RequestBody @Valid ChangeRoleDto changeRoleDto){
+    public UserDto changeUserRole(@RequestBody @Valid ChangeRoleDto changeRoleDto) {
         return adminService.changeUserRole(changeRoleDto);
+    }
+
+    @PutMapping("api/admin/user/access")
+    public account.payment.StatusDto changeAccess(@RequestBody @Valid ChangeAccessDto changeAccessDto) {
+        return adminService.changeAccess(changeAccessDto);
     }
 }

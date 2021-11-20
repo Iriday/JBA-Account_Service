@@ -26,4 +26,5 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @OrderBy
     private List<Role> roles;
+    private boolean isAccountNonLocked;
 }

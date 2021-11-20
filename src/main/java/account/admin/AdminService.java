@@ -5,6 +5,7 @@ import account.user.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import static account.security.Role.*;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AdminService {
     private UserRepository userRepo;
     private UserService userService;
@@ -73,5 +75,18 @@ public class AdminService {
         }
 
         return userMapper.userToUserDto(userRepo.save(user));
+    }
+
+    public account.payment.StatusDto changeAccess(ChangeAccessDto dto) {
+        User user = userService.getUserByEmailIgnoreCase(dto.getName());
+
+        if(dto.getOperation() == AccessOperation.LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't lock the ADMINISTRATOR!");
+        }
+
+        user.setAccountNonLocked(dto.getOperation().boolValue);
+        userRepo.save(user);
+
+        return new account.payment.StatusDto(String.format("User %s %s!", user.getEmail(), dto.getOperation().strValue));
     }
 }

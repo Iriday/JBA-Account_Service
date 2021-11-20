@@ -12,6 +12,7 @@ public class UserDetailsImpl implements UserDetails {
     private final String email;
     private final String password;
     private final Set<GrantedAuthority> rolesAndAuthorities;
+    private final boolean accountNonLocked;
     private final User user;
 
     public UserDetailsImpl(User user) {
@@ -22,6 +23,7 @@ public class UserDetailsImpl implements UserDetails {
                 .stream()
                 .map(r -> new SimpleGrantedAuthority(r.name()))
                 .collect(Collectors.toSet());
+        this.accountNonLocked = user.isAccountNonLocked();
         this.user = user;
     }
 
@@ -51,7 +53,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override
