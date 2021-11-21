@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,5 +27,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @OrderBy
     private List<Role> roles;
+    private int loginFailCount;
     private boolean isAccountNonLocked;
+    private LocalDate lockedAt;
 }
