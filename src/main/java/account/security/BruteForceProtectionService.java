@@ -49,35 +49,40 @@ public class BruteForceProtectionService {
     }
 
     public void incrementLoginFailCountAndLockAccountIfLimit(String email) {
-        User user = userRepo.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+        userRepo.findByEmailIgnoreCase(email).ifPresentOrElse(user -> {
+                    user.setLoginFailCount(user.getLoginFailCount() + 1);
 
-        user.setLoginFailCount(user.getLoginFailCount() + 1);
+                    auditorService.saveSecurityEvent(SecurityEvent
+                            .builder()
+                            .action(LOGIN_FAILED)
+                            .subject(email)
+                            .object(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
+                            .build());
 
-        auditorService.saveSecurityEvent(SecurityEvent
-                .builder()
-                .action(LOGIN_FAILED)
-                .subject(email)
-                .object(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
-                .build());
+                    if (user.getLoginFailCount() == MAX_LOGIN_FAIL_ATTEMPTS) {
+                        user.setLockedAt(LocalDate.now());
+                        user.setAccountNonLocked(false);
 
-        if (user.getLoginFailCount() == MAX_LOGIN_FAIL_ATTEMPTS) {
-            user.setLockedAt(LocalDate.now());
-            user.setAccountNonLocked(false);
+                        auditorService.saveSecurityEvent(SecurityEvent
+                                .builder()
+                                .action(BRUTE_FORCE)
+                                .subject(email)
+                                .object(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
+                                .build());
 
-            auditorService.saveSecurityEvent(SecurityEvent
-                    .builder()
-                    .action(BRUTE_FORCE)
-                    .subject(email)
-                    .object(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
-                    .build());
-
-            auditorService.saveSecurityEvent(SecurityEvent
-                    .builder()
-                    .action(LOCK_USER)
-                    .subject(email)
-                    .object("Lock user " + email)
-                    .build());
-        }
+                        auditorService.saveSecurityEvent(SecurityEvent
+                                .builder()
+                                .action(LOCK_USER)
+                                .subject(email)
+                                .object("Lock user " + email)
+                                .build());
+                    }
+                }, () -> auditorService.saveSecurityEvent(SecurityEvent
+                        .builder()
+                        .action(LOGIN_FAILED)
+                        .subject(email)
+                        .object(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
+                        .build())
+        );
     }
 }

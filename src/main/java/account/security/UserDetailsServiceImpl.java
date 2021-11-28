@@ -15,7 +15,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        bruteForceProtectionService.resetUserLockIfLockedAndIf24HoursPassedAfterLock(email);
+        if (userRepo.existsByEmailIgnoreCase(email)) {
+            bruteForceProtectionService.resetUserLockIfLockedAndIf24HoursPassedAfterLock(email);
+        }
 
         return userRepo
                 .findByEmailIgnoreCase(email)
