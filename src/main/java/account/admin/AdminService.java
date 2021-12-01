@@ -108,7 +108,7 @@ public class AdminService {
     }
 
     public account.payment.StatusDto changeAccess(ChangeAccessDto dto) {
-        User user = userService.getUserByEmailIgnoreCase(dto.getName());
+        User user = userService.getUserByEmailIgnoreCase(dto.getUser());
 
         if (dto.getOperation() == LOCK && user.getRoles().contains(ROLE_ADMINISTRATOR)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't lock the ADMINISTRATOR!");
@@ -126,12 +126,12 @@ public class AdminService {
         switch (dto.getOperation()) {
             case LOCK:
                 securityEvent.setAction(LOCK_USER);
-                securityEvent.setObject("Lock user " + dto.getName());
+                securityEvent.setObject("Lock user " + dto.getUser());
                 break;
 
             case UNLOCK:
                 securityEvent.setAction(UNLOCK_USER);
-                securityEvent.setObject("Unlock user " + dto.getName());
+                securityEvent.setObject("Unlock user " + dto.getUser());
                 break;
         }
         auditorService.saveSecurityEvent(securityEvent);

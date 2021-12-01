@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ChangeAccessDto {
     @NotBlank
-    private String name;
+    private String user;
     @NotNull
     private AccessOperation operation;
 }
