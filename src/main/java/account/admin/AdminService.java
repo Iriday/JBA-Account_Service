@@ -126,12 +126,12 @@ public class AdminService {
         switch (dto.getOperation()) {
             case LOCK:
                 securityEvent.setAction(LOCK_USER);
-                securityEvent.setObject("Lock user " + dto.getUser());
+                securityEvent.setObject("Lock user " + user.getEmail());
                 break;
 
             case UNLOCK:
                 securityEvent.setAction(UNLOCK_USER);
-                securityEvent.setObject("Unlock user " + dto.getUser());
+                securityEvent.setObject("Unlock user " + user.getEmail());
                 break;
         }
         auditorService.saveSecurityEvent(securityEvent);
